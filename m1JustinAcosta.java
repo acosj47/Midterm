@@ -58,6 +58,7 @@ void reset(){
    table();
    ball();
    action();
+   collisions();
   }
   
   //pool table
@@ -92,6 +93,8 @@ void reset(){
   void action(){   //bounce balls off walls
   
   
+  
+  
   jX += jDX;
   if(jX > right || jX < left) jDX *= -1;
  
@@ -113,6 +116,16 @@ void reset(){
   
     //if(wall){
     //}
+  }
+  
+  void collisions(){  // balls collide
+  float tmp;
+ 
+ if (dist(jX, jY, kX, kY) < 30){
+   tmp= kDX;  kDX = jDX;  jDX = tmp;
+   tmp= kDY;  kDY = jDY;  jDY= tmp;
+ } 
+    
   }
   
   
