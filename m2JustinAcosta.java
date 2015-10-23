@@ -11,33 +11,32 @@ Add wall in the middle that makes ball stay on the right of the screen
 Add keys 1, 2, 3 to reset balls to the right of table.  "r" resets all balls
 "w" removes wall
 "p" changes table color to pink
-"m" makes animated mouse run across bottom of table
+"m" makes animated rat run across bottom of table
 Make buttons that do the same things as the w, p, m keys
-Make balls clickable taht reset them the same way keys 1,2,3 work
+Make balls clickable that reset them the same way keys 1,2,3 work
 */
 
 //Globals
 String name = "Justin Acosta";
-String title = "M2";
+String title = "M2  CST 112 EVE";
 String toggle= "press 'w' or click here to toggle the wall!";
 String clear= "press 'r' or click here to reset the table!";
 String pink= "press 'p' or click here for pink table!";
 String click= "click a ball to reset its position!";
 String press= "press key 1, 2, or 3 to reset respective ball!";
-String rat= "press 'm' or click here to call mouse!";
-float jX, jY, jDX, jDY;  //red ball
-float kX, kY, kDX, kDY;  //blue ball
-float aX, aY, aDX, aDY;  // yellow ball
-float top, bottom, left, right, middle;  // screen postitons
+String rodent= "press 'm' or click here to call rat!";
+float jackX, jackY, jackDX, jackDY;  // red ball
+float kingX, kingY, kingDX, kingDY;  // blue ball
+float aceX, aceY, aceDX, aceDY;      // yellow ball
+float top, bottom, left, right, middle;  // boarders and middle of table
 float r, g, b;   // color for felt
-float button1X, button1Y, button1W, button1H;      //buttons to click
-float button2X, button2Y, button2W, button2H;
-float button3X, button3Y, button3W, button3H;
-float button4X, button4Y, button4W, button4H;
-float miceX, miceY, miceDX;  //globals for rat
-boolean wall;
-boolean mouse;
-int count;
+float button1X, button2X, button3X, button4X;  // button  x, y, w, h globals
+float buttonY;
+float buttonW, buttonH;     
+float ratX, ratY, ratDX;  //globals for rat
+boolean wall;  // true or false for wall, defined in reset()
+boolean rat; // true or false for rat, defined in reset()
+int count;  
 
 
 //setup, initial size 640x480  
@@ -51,49 +50,36 @@ int count;
 // starting positions and speeds
  void reset(){
     wall = true;              // wall exists on start and reset
-    mouse = false;            // mouse does not start on screen
-    top= height*38/100;       //top of center      
-    bottom= height*85/100;    //bottom of center
-    left= width*10/100;       //left of center
-    right=width*91/100;       // right of center
-    middle= left + (right-left)/2;  //center
+    rat = false;              // rat does not start on screen
+    top= height*38/100;       // top boarder of table      
+    bottom= height*85/100;    // bottom boarder of table
+    left= width*10/100;       // left boarder of table
+    right=width*91/100;       // right oboarder of table
+    middle= left + (right-left)/2;  //center of table
     r= 100;  g= 200;  b= 100;       //starting color of felt
     //ball positions
-    jX= random(middle + 15, right);      jY=random(top, bottom);
-    kX= random(middle + 15, right);      kY=random(top, bottom);
-    aX= random(middle + 15, right);      aY=random(top, bottom);
+    jackX= random(middle + 15, right);      jackY=random(top, bottom);  // red ball
+    kingX= random(middle + 15, right);      kingY=random(top, bottom);  // blue ball
+    aceX= random(middle + 15, right);       aceY=random(top, bottom);   // yellow ball
     //ball speed
-    jDX= random(1,6);                    jDY= random(1,6);
-    kDX= random(1,6);                    kDY= random(1,6);
-    aDX= random(1,6);                    aDY= random(1,6);
-   
-    //animated mouse position and speed   
-    miceX = 0;  
-    miceY = height*82/100;  
-    miceDX = 3;  //speed
-
+    jackDX= random(1,6);                    jackDY= random(1,6);        // red speed
+    kingDX= random(1,6);                    kingDY= random(1,6);        // blue speed
+    aceDX= random(1,6);                     aceDY= random(1,6);         // yellow speed
     
-    // button coordinates
+    //animated rat position and speed   
+    ratX = 0;  
+    ratY = height*82/100;  
+    ratDX = 3;  // rat speed
+
+    // button x,y coordinates &  width, height
     button1X = left - 40;       // button1 controls wall
-    button1Y = top - 145; 
-    button1W = 100;
-    button1H = 100;
-    
     button2X = button1X +110;    //button2 resets table
-    button2Y = top - 145;
-    button2W = 100;
-    button2H = 100;
-    
     button3X = button1X + 220;   // button 3 makes table pink
-    button3Y = top - 145;
-    button3W = 100;
-    button3H = 100;
+    button4X = button1X + 330;   // button 4 summons animated rat
+    buttonY = top - 145;         
+    buttonW = 100;
+    buttonH = 100;
     
-    button4X = button1X + 330;   // button 4 summons animated mouse
-    button4Y = top - 145;
-    button4W = 100;
-    button4H = 100;
-
 }
   
   void draw(){
@@ -103,9 +89,12 @@ int count;
    ball();
    action();
    collisions();
-   showButton();
+   showButton(button1X, buttonY, buttonW, buttonH);
+   showButton(button2X, buttonY, buttonW, buttonH);
+   showButton(button3X, buttonY, buttonW, buttonH);
+   showButton(button4X, buttonY, buttonW, buttonH);
    info();
-   showMouse();
+   showRat();
   }
   
   //shows pool table and wall
@@ -122,7 +111,7 @@ int count;
       line(width/2, top, width/2, bottom);
       fill(0);
       textSize(20);
-      text("W", middle-10, height/2);
+      text("W", middle-10, height/2);         // wall text
       text("A", middle-8, height/2 + 30);
       text("L", middle-8, height/2 + 60);
       text("L", middle-8, height/2 + 90);
@@ -136,49 +125,49 @@ int count;
   void ball(){
     
     fill(255, 0, 0);
-    ellipse(jX, jY, 30, 30);     //red ball
+    ellipse(jackX, jackY, 30, 30);     //red ball
     fill(50, 50, 255);
-    ellipse(kX, kY, 30, 30);     // blue ball
+    ellipse(kingX, kingY, 30, 30);     // blue ball
     fill(255, 255, 0);
-    ellipse(aX, aY, 30, 30);     //yellow ball
+    ellipse(aceX, aceY, 30, 30);     //yellow ball
     
     fill(0);                     // numbered balls
     textSize(20);
-    text("1", jX-5, jY+5); 
-    text("2", kX-5, kY+5);
-    text("3", aX-5, aY+5);
+    text("1", jackX-5, jackY+5);    //  red is 1
+    text("2", kingX-5, kingY+5);    // blue is 2
+    text("3", aceX-5,  aceY+5);     // yellow is 3
     textSize(12);
  }
  
   //move and bounce balls off walls
   void action(){ 
-    jX += jDX;  jY += jDY;  //move red ball
-    kX += kDX;  kY += kDY;  //move blue ball
-    aX += aDX;  aY += aDY;  //move yellow ball
+    jackX += jackDX;  jackY += jackDY;  //move red ball
+    kingX += kingDX;  kingY += kingDY;  //move blue ball
+    aceX += aceDX;    aceY += aceDY;   //move yellow ball
       
 //bounce off middle if wall is there
     if(wall){           
    //red ball bounce with wall
-      if(jX < middle + 25 || jX > right) jDX *= -1;   
-      if(jY < top || jY > bottom) jDY *= -1;
+      if(jackX < middle + 25 || jackX > right) jackDX *= -1;   
+      if(jackY < top || jackY > bottom) jackDY *= -1;
    //blue ball bounce with wall
-        if(kX < middle + 25 || kX > right) kDX *= -1; 
-        if(kY < top || kY > bottom) kDY *= -1;
+        if(kingX < middle + 25 || kingX > right) kingDX *= -1; 
+        if(kingY < top || kingY > bottom) kingDY *= -1;
    //yellow ball bounce with wall
-          if(aX < middle + 25 || aX > right) aDX *= -1;  
-          if(aY < top || aY > bottom) aDY *= -1;
+          if(aceX < middle + 25 || aceX > right) aceDX *= -1;  
+          if(aceY < top || aceY > bottom) aceDY *= -1;
    
   }else{  //bounce off left if wall is gone 
     
     //red ball bounce, no wall
-       if(jX < left  || jX > right ) jDX *= -1;         
-       if(jY < top || jY > bottom) jDY *= -1;
+       if(jackX < left  || jackX > right ) jackDX *= -1;         
+       if(jackY < top || jackY > bottom) jackDY *= -1;
     // blue ball bounce, no wall
-         if(kX < left || kX > right) kDX *= -1;          
-         if(kY < top || kY > bottom) kDY *= -1;
+         if(kingX < left || kingX > right) kingDX *= -1;          
+         if(kingY < top || kingY > bottom) kingDY *= -1;
     // yellow ball bounce, no wall
-           if(aX < left || aX > right) aDX *= -1;         
-           if(aY < top || aY > bottom) aDY *= -1;
+           if(aceX < left || aceX > right) aceDX *= -1;         
+           if(aceY < top || aceY > bottom) aceDY *= -1;
       
     }
 }
@@ -187,44 +176,37 @@ int count;
   void collisions(){  
     float tmp;
  
-   if (dist(jX, jY, kX, kY) < 30){                //red and blue
-     tmp= kDX;  kDX = jDX;  jDX = tmp;
-     tmp= kDY;  kDY = jDY;  jDY= tmp;
+   if (dist(jackX, jackY, kingX, kingY) < 30){                //red and blue
+     tmp= kingDX;  kingDX = jackDX;  jackDX = tmp;
+     tmp= kingDY;  kingDY = jackDY;  jackDY= tmp;
    } 
    
    
-   if (dist(jX, jY, aX, aY) < 30){                //red and yellow
-     tmp= aDX;  aDX = jDX;  jDX = tmp;
-     tmp= aDY;  aDY = jDY;  jDY= tmp;
+   if (dist(jackX, jackY, aceX, aceY) < 30){                //red and yellow
+     tmp= aceDX;  aceDX = jackDX;  jackDX = tmp;
+     tmp= aceDY;  aceDY = jackDY;  jackDY= tmp;
       
     }
     
-    if (dist(kX, kY, aX, aY) < 30){                //blue and yellow
-     tmp= aDX;  aDX = kDX;  kDX = tmp;
-     tmp= aDY;  aDY = kDY;  kDY= tmp;
+    if (dist(kingX, kingY, aceX, aceY) < 30){                //blue and yellow
+     tmp= aceDX;  aceDX = kingDX;  kingDX = tmp;
+     tmp= aceDY;  aceDY = kingDY;  kingDY= tmp;
     
     }
 }
  
-  // displays buttons to be clicked, and their texts
-  void showButton(){
+  
+  // displays buttons to be clicked
+  void showButton(float x, float y, float w, float h){
      rectMode(CORNER);  // set rect mode to corner
      fill(0);
-     rect(button1X, button1Y, button1W, button1H);   // button1
-     rect(button2X, button2Y, button2W, button2H);   // button2
-     rect(button3X, button3Y, button3W, button3H);   // button3
-     rect(button4X, button4Y, button4W, button4H);   // button4
-     //text for buttons
-     textSize(15);
-     fill(255, 255, 0);
-     text(toggle, button1X +8, button1Y +5, 100, 100);  //toggle wall text
-     text(clear, button2X +8, button2Y +5, 100, 100);   // clear table text
-     text(pink, button3X +4 , button3Y +15, 100, 100);  // pink table text
-     text(rat, button4X +4, button4Y +10, 100, 100);    //call rat text
-     textSize(12);
+     rect(x, y, w, h);   // button 
+
+     
 }
   
-   // displays name, title, text information
+  
+   // displays name, title and button text
   void info(){   
     fill(0);
     textSize(20);
@@ -234,45 +216,54 @@ int count;
     text(click, middle, height*96/100);  // click ball text
     text(press, middle, height*99/100);       // press 1,2,3 text
     textSize(12);  // reset text size to default
+    
+    //text for buttons
+     textSize(15);
+     fill(255, 255, 0);
+     text(toggle, button1X + 5, buttonY, buttonW, buttonH);  //  button 1 toggle wall text
+     text(clear, button2X + 5, buttonY, buttonW, buttonH);   //  button 2 clear table text
+     text(pink, button3X + 5, buttonY, buttonW, buttonH);    //  button 3 pink table text
+     text(rodent, button4X + 5, buttonY, buttonW, buttonH);  //  button 4 call rat text
+     textSize(12);
   
 }
-//shows animated mouse at bottom of screen 
-void showMouse(){
+//shows animated rat at bottom of screen 
+void showRat(){
   
-  if(mouse == true){
-      miceX += miceDX;
+  if(rat == true){
+      ratX += ratDX;
       fill(150);
-      ellipse(miceX, miceY, 50, 30);     //body
+      ellipse(ratX, ratY, 50, 30);     //body
       fill(255, 200, 200);
-      ellipse(miceX + 30, miceY - 15, 30, 10);  //nose
+      ellipse(ratX + 30, ratY - 15, 30, 10);  //nose
       fill(150);
-      ellipse(miceX + 20, miceY - 20, 10, 30);  // ear
-      ellipse(miceX + 30, miceY - 20, 10, 30);  //ear
+      ellipse(ratX + 20, ratY - 20, 10, 30);  // ear
+      ellipse(ratX + 30, ratY - 20, 10, 30);  //ear
       fill(255, 200, 200);
-      ellipse(miceX + 20, miceY - 20, 5, 20);  // inner ear
-      ellipse(miceX + 30, miceY - 20, 5, 20);  // inner ear
+      ellipse(ratX + 20, ratY - 20, 5, 20);  // inner ear
+      ellipse(ratX + 30, ratY - 20, 5, 20);  // inner ear
       fill(150);
-      ellipse(miceX + 25, miceY - 15, 30, 20);  // head
+      ellipse(ratX + 25, ratY - 15, 30, 20);  // head
       stroke(0);
       strokeWeight(4);
-      point(miceX + 23, miceY - 18);   //eye
-      point(miceX + 33, miceY - 18);   //eye
+      point(ratX + 23, ratY - 18);   //eye
+      point(ratX + 33, ratY - 18);   //eye
       
       if(count/30 % 2 == 0){           //leg animation
-        line(miceX - 15, miceY + 10, miceX - 10, miceY + 25);    //legs
-        line(miceX + 15, miceY + 10, miceX + 10, miceY + 25);
+        line(ratX - 15, ratY + 10, ratX - 10, ratY + 25);    //legs
+        line(ratX + 15, ratY + 10, ratX + 10, ratY + 25);
       }else{
-        line(miceX - 15, miceY + 10, miceX - 25, miceY + 25);    //legs
-        line(miceX + 15, miceY + 10, miceX + 25, miceY + 25);
+        line(ratX - 15, ratY + 10, ratX - 25, ratY + 25);    //legs
+        line(ratX + 15, ratY + 10, ratX + 25, ratY + 25);
         
    }
    
-   if(miceX > width){    
-       miceX = 0;
+   if(ratX > width + 200){    //rat starts again at 0 if it goes off screen
+       ratX = 0;
     }
     
     stroke(255, 200, 200);
-    line(miceX - 20, miceY - 10, miceX - 30, miceY - 30);   // tail
+    line(ratX - 20, ratY - 10, ratX - 30, ratY - 30);   // tail
   }
     strokeWeight(1);  // reset stroke weight and color
     stroke(0);
@@ -290,15 +281,15 @@ void showMouse(){
    }
 
    if(key == '1'){      // 1 key resets red to right side of screen
-      jX= random(middle + 15, right);      jY=random(top, bottom); 
+      jackX= random(middle + 15, right);      jackY=random(top, bottom); 
    }  
      
    if(key == '2'){     // 2 key resets blue to the right
-       kX= random(middle + 15, right);      kY=random(top, bottom);
+       kingX= random(middle + 15, right);      kingY=random(top, bottom);
    }
    
    if (key == '3'){      // 3 key resets yellow to the right       
-       aX= random(middle + 15, right);      aY=random(top, bottom);
+       aceX= random(middle + 15, right);      aceY=random(top, bottom);
    }
    
    if(key == 'p'){       // p key changes felt color to pink
@@ -308,60 +299,60 @@ void showMouse(){
    }
    
    if(key == 'm'){      // m key summons rat
-     mouse= !mouse;
+     rat= !rat;
    }
 }
      
-     //left click mouseButton to perform various actions
+     //left click buttons and balls to perform various actions
   void mousePressed(){
    if(mouseButton == LEFT  &&           // left click button1 to remove wall
       mouseX > button1X &&
-      mouseX < button1X + button1W &&
-      mouseY > button1Y &&
-      mouseY < button1Y + button1H){
+      mouseX < button1X + buttonW &&
+      mouseY > buttonY &&
+      mouseY < buttonY + buttonH){
         wall = !wall;
       }
       
    if(mouseButton == LEFT  &&         // left click button2 to reset table
       mouseX > button2X &&
-      mouseX < button2X + button2W &&
-      mouseY > button2Y &&
-      mouseY < button2Y + button2H){
+      mouseX < button2X + buttonW &&
+      mouseY > buttonY &&
+      mouseY < buttonY + buttonH){
         reset();
       }
       
    if(mouseButton == LEFT  &&         // left click button 3 to turn table pink
       mouseX > button3X &&
-      mouseX < button3X + button3W &&
-      mouseY > button3Y &&
-      mouseY < button3Y + button3H){
+      mouseX < button3X + buttonW &&
+      mouseY > buttonY &&
+      mouseY < buttonY + buttonH){
         r=255;
         g=200;
         b=200;
       }
    
-   if(mouseButton == LEFT &&     // left click button 4 to call mouse
+   if(mouseButton == LEFT &&     // left click button 4 to call rat
       mouseX > button4X &&
-      mouseX < button4X + button4W &&
-      mouseY > button4Y &&
-      mouseY < button4Y + button4H){
-        mouse = !mouse;
+      mouseX < button4X + buttonW &&
+      mouseY > buttonY &&
+      mouseY < buttonY + buttonH){
+        rat = !rat;
         
       }
     
     if(mouseButton == LEFT)     // left click red ball to reset it
-       if(dist(jX, jY, mouseX, mouseY) < 50){
-         jX= random(middle + 15, right);      jY=random(top, bottom);
+       if(dist(jackX, jackY, mouseX, mouseY) < 50){
+         jackX= random(middle + 15, right);      jackY=random(top, bottom);
        }
        
     if(mouseButton == LEFT)   // left click blue ball to reset it
-       if(dist(kX, kY, mouseX, mouseY) < 50){
-         kX= random(middle + 15, right);      kY=random(top, bottom);
+       if(dist(kingX, kingY, mouseX, mouseY) < 50){
+         kingX= random(middle + 15, right);      kingY=random(top, bottom);
        }
        
     if(mouseButton == LEFT)   // left click yellow ball to reset it
-       if(dist(aX, aY, mouseX, mouseY) < 50){
-          aX= random(middle + 15, right);      aY=random(top, bottom);
+       if(dist(aceX, aceY, mouseX, mouseY) < 50){
+          aceX= random(middle + 15, right);      aceY=random(top, bottom);
        }
       
 }
