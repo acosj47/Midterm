@@ -32,12 +32,13 @@ float r, g, b;   // color for felt
 float button1X, button1Y, button1W, button1H;      //buttons to click
 float button2X, button2Y, button2W, button2H;
 float button3X, button3Y, button3W, button3H;
-
 boolean wall;
 boolean mouse= false;
 
 
-//setup, window 640x480
+//setup, initial size 640x480  
+//made most coordinates relative to height and width
+//most things should stay centered if size is changed
  void setup(){
    size(640, 480);
    reset();
@@ -46,10 +47,10 @@ boolean mouse= false;
 // starting positions and speeds
  void reset(){
     wall = true;          // wall exists on start and reset
-    top= height-305;      //top of center      
-    bottom= height-75;    //bottom of center
-    left= width/2-260;    //left of center
-    right=width/2+260;    // right of center
+    top= height*38/100;      //top of center      
+    bottom= height*85/100;    //bottom of center
+    left= width*10/100;    //left of center
+    right=width*91/100;    // right of center
     middle= left + (right-left)/2;  //center
     r= 100;  g= 200;  b= 100;   //starting color for felt
     //ball positions
@@ -91,9 +92,9 @@ boolean mouse= false;
   void table(){
     rectMode(CENTER);  // rect mode is center
     fill(#432805);
-    rect(width/2, height/2 + 50, 600, 300);     //boarder
+    rect(width/2, height*62/100, 600, 300);     //boarder
     fill(r, g, b);
-    rect(width/2, height/2 + 50, 550, 250);     //felt
+    rect(width/2, height*62/100, 550, 250);     //felt
     strokeWeight(20);                          //stroke weight of wall
     stroke(150, 0, 255);                       // wall color
     
@@ -101,7 +102,7 @@ boolean mouse= false;
       line(width/2, top, width/2, bottom);
       fill(0);
       textSize(20);
-      text("W", middle-8, height/2);
+      text("W", middle-10, height/2);
       text("A", middle-8, height/2 + 30);
       text("L", middle-8, height/2 + 60);
       text("L", middle-8, height/2 + 90);
@@ -150,7 +151,7 @@ boolean mouse= false;
   }else{  //bounce off left if wall is gone 
     
     //red ball bounce, no wall
-       if(jX < left || jX > right) jDX *= -1;         
+       if(jX < left  || jX > right ) jDX *= -1;         
        if(jY < top || jY > bottom) jDY *= -1;
     // blue ball bounce, no wall
          if(kX < left || kX > right) kDX *= -1;          
@@ -205,11 +206,11 @@ boolean mouse= false;
   void info(){   
     fill(0);
     textSize(20);
-    text(name, left-40, bottom + 65);  //name 
-    text(title, left-40, top - 150);   //title
+    text(name, left*1/3, height*98/100);  //name 
+    text(title, left*1/3, height*5/100);   //title
     textSize(15);
-    text(click, middle + 50, bottom + 50);  // click ball text
-    text(press, middle, bottom + 70);       // press 1,2,3 text
+    text(click, middle, height*96/100);  // click ball text
+    text(press, middle, height*99/100);       // press 1,2,3 text
     textSize(12);  // reset text size to default
   
 }
