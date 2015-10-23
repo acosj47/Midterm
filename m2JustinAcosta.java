@@ -24,6 +24,7 @@ String clear= "press 'r' or click here to reset the table!";
 String pink= "press 'p' or click here for pink table!";
 String click= "click a ball to reset its position!";
 String press= "press key 1, 2, or 3 to reset respective ball!";
+String rat= "press 'm' or click here to call mouse!";
 float jX, jY, jDX, jDY;  //red ball
 float kX, kY, kDX, kDY;  //blue ball
 float aX, aY, aDX, aDY;  // yellow ball
@@ -32,8 +33,11 @@ float r, g, b;   // color for felt
 float button1X, button1Y, button1W, button1H;      //buttons to click
 float button2X, button2Y, button2W, button2H;
 float button3X, button3Y, button3W, button3H;
+float button4X, button4Y, button4W, button4H;
+float miceX, miceY, miceDX;  //globals for rat
 boolean wall;
-boolean mouse= false;
+boolean mouse;
+int count;
 
 
 //setup, initial size 640x480  
@@ -46,13 +50,14 @@ boolean mouse= false;
 
 // starting positions and speeds
  void reset(){
-    wall = true;          // wall exists on start and reset
-    top= height*38/100;      //top of center      
+    wall = true;              // wall exists on start and reset
+    mouse = false;            // mouse does not start on screen
+    top= height*38/100;       //top of center      
     bottom= height*85/100;    //bottom of center
-    left= width*10/100;    //left of center
-    right=width*91/100;    // right of center
+    left= width*10/100;       //left of center
+    right=width*91/100;       // right of center
     middle= left + (right-left)/2;  //center
-    r= 100;  g= 200;  b= 100;   //starting color for felt
+    r= 100;  g= 200;  b= 100;       //starting color of felt
     //ball positions
     jX= random(middle + 15, right);      jY=random(top, bottom);
     kX= random(middle + 15, right);      kY=random(top, bottom);
@@ -61,24 +66,38 @@ boolean mouse= false;
     jDX= random(1,6);                    jDY= random(1,6);
     kDX= random(1,6);                    kDY= random(1,6);
     aDX= random(1,6);                    aDY= random(1,6);
+   
+    //animated mouse position and speed   
+    miceX = 0;  
+    miceY = height*82/100;  
+    miceDX = 3;  //speed
+
+    
     // button coordinates
-    button1X = left - 40; 
+    button1X = left - 40;       // button1 controls wall
     button1Y = top - 145; 
     button1W = 100;
     button1H = 100;
     
-    button2X = button1X +110;
+    button2X = button1X +110;    //button2 resets table
     button2Y = top - 145;
     button2W = 100;
     button2H = 100;
     
-    button3X = button1X + 220;
+    button3X = button1X + 220;   // button 3 makes table pink
     button3Y = top - 145;
     button3W = 100;
     button3H = 100;
+    
+    button4X = button1X + 330;   // button 4 summons animated mouse
+    button4Y = top - 145;
+    button4W = 100;
+    button4H = 100;
+
 }
   
   void draw(){
+   count += 1; // count for animation
    background(#21FAEA); 
    table();
    ball();
@@ -86,6 +105,7 @@ boolean mouse= false;
    collisions();
    showButton();
    info();
+   showMouse();
   }
   
   //shows pool table and wall
@@ -117,7 +137,7 @@ boolean mouse= false;
     
     fill(255, 0, 0);
     ellipse(jX, jY, 30, 30);     //red ball
-    fill(0, 0, 255);
+    fill(50, 50, 255);
     ellipse(kX, kY, 30, 30);     // blue ball
     fill(255, 255, 0);
     ellipse(aX, aY, 30, 30);     //yellow ball
@@ -193,12 +213,14 @@ boolean mouse= false;
      rect(button1X, button1Y, button1W, button1H);   // button1
      rect(button2X, button2Y, button2W, button2H);   // button2
      rect(button3X, button3Y, button3W, button3H);   // button3
+     rect(button4X, button4Y, button4W, button4H);   // button4
      //text for buttons
      textSize(15);
      fill(255, 255, 0);
      text(toggle, button1X +8, button1Y +5, 100, 100);  //toggle wall text
      text(clear, button2X +8, button2Y +5, 100, 100);   // clear table text
      text(pink, button3X +4 , button3Y +15, 100, 100);  // pink table text
+     text(rat, button4X +4, button4Y +10, 100, 100);    //call rat text
      textSize(12);
 }
   
@@ -214,7 +236,51 @@ boolean mouse= false;
     textSize(12);  // reset text size to default
   
 }
-   // gives controlls to keys r, w, p, 1, 2 and 3
+//shows animated mouse at bottom of screen 
+void showMouse(){
+  
+  if(mouse == true){
+      miceX += miceDX;
+      fill(150);
+      ellipse(miceX, miceY, 50, 30);     //body
+      fill(255, 200, 200);
+      ellipse(miceX + 30, miceY - 15, 30, 10);  //nose
+      fill(150);
+      ellipse(miceX + 20, miceY - 20, 10, 30);  // ear
+      ellipse(miceX + 30, miceY - 20, 10, 30);  //ear
+      fill(255, 200, 200);
+      ellipse(miceX + 20, miceY - 20, 5, 20);  // inner ear
+      ellipse(miceX + 30, miceY - 20, 5, 20);  // inner ear
+      fill(150);
+      ellipse(miceX + 25, miceY - 15, 30, 20);  // head
+      stroke(0);
+      strokeWeight(4);
+      point(miceX + 23, miceY - 18);   //eye
+      point(miceX + 33, miceY - 18);   //eye
+      
+      if(count/30 % 2 == 0){           //leg animation
+        line(miceX - 15, miceY + 10, miceX - 10, miceY + 25);    //legs
+        line(miceX + 15, miceY + 10, miceX + 10, miceY + 25);
+      }else{
+        line(miceX - 15, miceY + 10, miceX - 25, miceY + 25);    //legs
+        line(miceX + 15, miceY + 10, miceX + 25, miceY + 25);
+        
+   }
+   
+   if(miceX > width){    
+       miceX = 0;
+    }
+    
+    stroke(255, 200, 200);
+    line(miceX - 20, miceY - 10, miceX - 30, miceY - 30);   // tail
+  }
+    strokeWeight(1);  // reset stroke weight and color
+    stroke(0);
+    
+    
+}
+
+   // gives controlls to keys r, m, w, p, 1, 2 and 3
   void keyPressed(){
    if(key == 'w'){      //w key removes wall, wall becomes false
       wall=!wall;
@@ -240,9 +306,13 @@ boolean mouse= false;
        g=200;
        b=200;
    }
+   
+   if(key == 'm'){      // m key summons rat
+     mouse= !mouse;
+   }
 }
      
-     //left click mouse to perform various actions
+     //left click mouseButton to perform various actions
   void mousePressed(){
    if(mouseButton == LEFT  &&           // left click button1 to remove wall
       mouseX > button1X &&
@@ -269,7 +339,15 @@ boolean mouse= false;
         g=200;
         b=200;
       }
-    
+   
+   if(mouseButton == LEFT &&     // left click button 4 to call mouse
+      mouseX > button4X &&
+      mouseX < button4X + button4W &&
+      mouseY > button4Y &&
+      mouseY < button4Y + button4H){
+        mouse = !mouse;
+        
+      }
     
     if(mouseButton == LEFT)     // left click red ball to reset it
        if(dist(jX, jY, mouseX, mouseY) < 50){
