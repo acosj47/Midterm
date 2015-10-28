@@ -93,10 +93,10 @@ void draw() {
   showBall(aceX,  aceY, 30, 30, color(255, 255, 0), "3");  // Yellow ball numbered 3
   action();
   collisions();
-  showButton(button1X, buttonY, buttonW, buttonH);    // button 1 toggles wall
-  showButton(button2X, buttonY, buttonW, buttonH);    // button 2 resets table
-  showButton(button3X, buttonY, buttonW, buttonH);    // button 3 turns table pink
-  showButton(button4X, buttonY, buttonW, buttonH);    // button 4 summons rat
+  showButton(button1X, buttonY, buttonW, buttonH, toggle);   // button 1 toggles wall
+  showButton(button2X, buttonY, buttonW, buttonH, clear);    // button 2 resets table
+  showButton(button3X, buttonY, buttonW, buttonH, pink);     // button 3 turns table pink
+  showButton(button4X, buttonY, buttonW, buttonH, rodent);   // button 4 summons rat
   info();
   showRat();
 }
@@ -127,12 +127,12 @@ void table() {
 
 // show different colored, numbered balls
 void showBall(float x, float y, float w, float h, color c, String z) {
-  fill(c);
-  ellipse(x, y, w, h);     
-  fill(0);
-  textSize(20);
-  text(z, x - 5, y + 5);
-  textSize(12);
+  fill(c);                   
+  ellipse(x, y, w, h);       // ball shape
+  fill(0);                   // ball text color
+  textSize(20);              // ball text size
+  text(z, x - 5, y + 5);     // ball text position
+  textSize(12);              // reset text size to 12
 }
 
 //move and bounce balls off walls
@@ -189,11 +189,15 @@ void collisions() {
 }
 
 
-// displays buttons to be clicked
-void showButton(float x, float y, float w, float h) {
+// displays buttons to be clicked and their text
+void showButton(float x, float y, float w, float h, String z) {
   rectMode(CORNER);  // set rect mode to corner
   fill(0);
-  rect(x, y, w, h);   // button
+  rect(x, y, w, h);        // button shape
+  textSize(15);            // button text size is 15
+  fill(255, 255, 0);       // button text color is yellow
+  text(z, x + 5, y, w, h); // button text position, the last 2 parameters (w,h) determine text wrap-around
+  textSize(12);            // reset text size to 12       
 }
 
 
@@ -207,19 +211,10 @@ void info() {
   text(click, middle, height*96/100);  // click ball text
   text(press, middle, height*99/100);       // press 1,2,3 text
   textSize(12);  // reset text size to default
-
-  //text for buttons
-  textSize(15);
-  fill(255, 255, 0);
-  text(toggle, button1X + 5, buttonY, buttonW, buttonH);  //  button 1 toggle wall text
-  text(clear, button2X + 5, buttonY, buttonW, buttonH);   //  button 2 clear table text
-  text(pink, button3X + 5, buttonY, buttonW, buttonH);    //  button 3 pink table text
-  text(rodent, button4X + 5, buttonY, buttonW, buttonH);  //  button 4 call rat text
-  textSize(12);
 }
+
 //shows animated rat at bottom of screen 
 void showRat() {
-
   if (rat == true) {
     ratX += ratDX;
     fill(150);
@@ -347,6 +342,3 @@ void mousePressed() {
       aceY= random(top, bottom);
     }
 }
-
-
-
