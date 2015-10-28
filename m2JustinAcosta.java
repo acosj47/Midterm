@@ -17,14 +17,14 @@
  */
 
 //Globals
-String name = "Justin Acosta";
-String title = "M2  CST 112 EVE";
-String toggle= "press 'w' or click here to toggle the wall!";
-String clear= "press 'r' or click here to reset the table!";
-String pink= "press 'p' or click here for pink table!";
-String click= "click a ball to reset its position!";
-String press= "press key 1, 2, or 3 to reset respective ball!";
-String rodent= "press 'm' or click here to call rat!";
+String name = "Justin Acosta";                                 // My name
+String title = "M2  CST 112 EVE";                              // Title Midterm 2
+String toggle= "press 'w' or click here to toggle the wall!";  // button 1 text
+String clear= "press 'r' or click here to reset the table!";   // button 2 text
+String pink= "press 'p' or click here for pink table!";        // button 3 text
+String rodent= "press 'm' or click here to call rat!";         // button 4 text
+String click= "click a ball to reset its position!";           // click ball text
+String press= "press key 1, 2, or 3 to reset respective ball!";// key 1,2,3 text
 float jackX, jackY, jackDX, jackDY;  // red ball
 float kingX, kingY, kingDX, kingDY;  // blue ball
 float aceX, aceY, aceDX, aceDY;      // yellow ball
