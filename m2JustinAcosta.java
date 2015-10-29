@@ -47,7 +47,7 @@ int count;     // count for animation, defined in draw
 
 //setup, initial size was 640x480  
 //made most coordinates relative to height and width
-//most things should still work properly if size is changed
+//most things should stay centered if size is changed
 void setup() {
   size(700, 500);
   reset();
@@ -57,10 +57,10 @@ void setup() {
 void reset() {
   wall = true;              // wall exists on start and reset
   rat = false;              // rat does not start on screen
-  top= height/2 - 75;       // top boarder of felt     
-  bottom= height - 60;      // bottom boarder of felt
-  left= width/2 - 270;      // left boarder of felt
-  right=width - 70;         // right oboarder of felt
+  top= height*34/100;       // top edge of felt     
+  bottom= height*88/100;    // bottom edge of felt
+  left= width*8/100;        // left edge of felt
+  right=width*89/100;       // right edge of felt
   middle= left + (right-left)/2;  //center of felt
   r= 100;  
   g= 200;  
@@ -82,20 +82,20 @@ void reset() {
   
   // button x,y coordinates
   // buttons are made in rectMode CORNERS, requires (x1, y1) and (x2, y2)
-  buttonWallX1 = width/2 - 295;       // buttonWall X1 and X2 
-  buttonWallX2 = width/2 - 195;        
+  buttonWallX1 = width*4/100;       // buttonWall X1 and X2 
+  buttonWallX2 = width*20/100;        
 
-  buttonResetX1 = width/2 - 185;      // buttonReset X1 and X2
-  buttonResetX2 = width/2 - 85;
+  buttonResetX1 = width*21/100;      // buttonReset X1 and X2
+  buttonResetX2 = width*37/100;
 
-  buttonPinkX1 = width/2 - 75;       // buttonPink X1 and X2
-  buttonPinkX2 = width/2 + 25;
+  buttonPinkX1 = width*38/100;       // buttonPink X1 and X2
+  buttonPinkX2 = width*54/100;
 
-  buttonRatX1 = width/2 + 35;        // buttonRat X1 and X2
-  buttonRatX2 = width/2 + 135; 
+  buttonRatX1 = width*55/100;        // buttonRat X1 and X2
+  buttonRatX2 = width*71/100; 
   
-  buttonY1 = top - 135;              // Y1 and Y2 coodinates for buttons
-  buttonY2 = top - 35;               // all 4 buttons have the same y1 and y2 coordinates
+  buttonY1 = height*6/100;              // Y1 and Y2 coodinates for buttons
+  buttonY2 = height*26/100;               // all 4 buttons have the same y1 and y2 coordinates
 }
 
 void draw() {
@@ -119,12 +119,12 @@ void draw() {
 void table() {
   rectMode(CORNERS);  // rect mode is corners
   fill(#432805);
-  rect(width/2 - 295, height/2 -100, width-40, height-35);     //boarder
+  rect( width*4/100, height*29/100, width*93/100, height*93/100);     //boarder
   fill(r, g, b);
   rect(left, top, right, bottom);            //felt
+
   strokeWeight(20);                          //stroke weight of wall
   stroke(150, 0, 255);                       // wall color
-
   if (wall) {                                  //wall
     line(middle, top + 6, middle, bottom - 6);
     fill(0);
@@ -162,22 +162,22 @@ void action() {
     if (jackY < top + 15 || jackY > bottom - 15) jackDY *= -1;
     //blue ball bounce with wall
     if (kingX < middle + 35 || kingX > right - 15) kingDX *= -1; 
-    if (kingY < top + 15 || kingY > bottom - 15) kingDY *= -1;
+    if (kingY < top + 15|| kingY > bottom - 15) kingDY *= -1;
     //yellow ball bounce with wall
     if (aceX < middle + 35 || aceX > right - 15) aceDX *= -1;  
-    if (aceY < top + 15 || aceY > bottom - 15) aceDY *= -1;
+    if (aceY < top + 15  || aceY > bottom - 15) aceDY *= -1;
     
   } else {  //bounce off left if wall is gone 
 
     //red ball bounce, no wall
-    if (jackX < left + 15  || jackX > right - 15 ) jackDX *= -1;         
+    if (jackX < left + 15  || jackX > right - 15) jackDX *= -1;         
     if (jackY < top + 15 || jackY > bottom - 15) jackDY *= -1;
     // blue ball bounce, no wall
-    if (kingX < left + 15 || kingX > right - 15) kingDX *= -1;          
+    if (kingX < left + 15|| kingX > right - 15) kingDX *= -1;          
     if (kingY < top + 15 || kingY > bottom - 15) kingDY *= -1;
     // yellow ball bounce, no wall
     if (aceX < left + 15 || aceX > right - 15) aceDX *= -1;         
-    if (aceY < top + 15 || aceY > bottom - 15) aceDY *= -1;
+    if (aceY < top + 15  || aceY > bottom - 15) aceDY *= -1;
   }
 }
 
@@ -219,11 +219,11 @@ void showButton(float x1, float y1, float x2, float y2, String z) {
 void info() {   
   fill(0);
   textSize(20);
-  text(name, left - 30, bottom + 50);       //name 
-  text(title, left - 30, height/2 - 220);  //title
+  text(name, width*4/100, height*98/100);       //name 
+  text(title, width*4/100, height*4/100);       //title
   textSize(15);
-  text(click, middle, bottom + 40);       // click ball text
-  text(press, middle, bottom + 55);       // press 1,2,3 text
+  text(click, middle, height*96/100);       // click ball text
+  text(press, middle, height*99/100);       // press 1,2,3 text
   textSize(12);  // reset text size to default
 }
 
